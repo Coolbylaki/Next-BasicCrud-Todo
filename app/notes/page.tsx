@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./Notes.module.css";
+import CreateNote from "./CreateNote";
 
 /* I need this if I'm not using fetch, like for example when I am using an SDK
 export const dynamic = "auto",
@@ -45,6 +46,8 @@ export default async function NotesPage() {
 					return <Note key={note.id} note={note} />;
 				})}
 			</div>
+
+			<CreateNote />
 		</div>
 	);
 }
