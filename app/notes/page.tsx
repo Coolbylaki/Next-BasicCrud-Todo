@@ -1,7 +1,16 @@
 import Link from "next/link";
 import styles from "./Notes.module.css";
 
-interface Item {
+/* I need this if I'm not using fetch, like for example when I am using an SDK
+export const dynamic = "auto",
+	dynamicParams = true,
+	revalidate = 0,
+	fetchCache = "auto",
+	runtime = "nodejs",
+	preferredRegion = "auto";
+*/
+
+interface Notes {
 	collectionId: string;
 	collectionName: string;
 	content: string;
@@ -11,16 +20,18 @@ interface Item {
 	updated: string;
 }
 
-type ItemProp = {
-	note: Item;
+type NoteProp = {
+	note: Notes;
 };
 
 async function getNotes() {
 	const res = await fetch(
-		"http://127.0.0.1:8090/api/collections/posts/records?page=1&perPage=30"
+		"http://127.0.0.1:8090/api/collections/posts/records?page=1&perPage=30",
+		{ cache: "no-store" }
 	);
 	const data = await res.json();
-	return data?.items as Item[];
+
+	return data?.items as Notes[];
 }
 
 export default async function NotesPage() {
@@ -28,7 +39,7 @@ export default async function NotesPage() {
 
 	return (
 		<div>
-			<h1 className={styles.pageTitle}>Notes</h1>
+			<h1>Notes</h1>
 			<div className={styles.grid}>
 				{notes?.map((note) => {
 					return <Note key={note.id} note={note} />;
@@ -38,7 +49,7 @@ export default async function NotesPage() {
 	);
 }
 
-const Note = ({ note }: ItemProp) => {
+const Note = ({ note }: NoteProp) => {
 	const { id, title, content, created } = note || {};
 
 	return (
